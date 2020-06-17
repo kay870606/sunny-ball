@@ -1,0 +1,10 @@
+C:\Users\Mia860820\source\repos\Ball\Ball\bin\Debug\Ball.exe.config
+C:\Users\Mia860820\source\repos\Ball\Ball\bin\Debug\Ball.exe
+C:\Users\Mia860820\source\repos\Ball\Ball\bin\Debug\Ball.pdb
+C:\Users\Mia860820\source\repos\Ball\Ball\obj\Debug\Ball.csprojAssemblyReference.cache
+C:\Users\Mia860820\source\repos\Ball\Ball\obj\Debug\Ball.Form1.resources
+C:\Users\Mia860820\source\repos\Ball\Ball\obj\Debug\Ball.Properties.Resources.resources
+C:\Users\Mia860820\source\repos\Ball\Ball\obj\Debug\Ball.csproj.GenerateResource.cache
+C:\Users\Mia860820\source\repos\Ball\Ball\obj\Debug\Ball.csproj.CoreCompileInputs.cache
+C:\Users\Mia860820\source\repos\Ball\Ball\obj\Debug\Ball.exe
+C:\Users\Mia860820\source\repos\Ball\Ball\obj\Debug\Ball.pdb
