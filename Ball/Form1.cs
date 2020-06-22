@@ -13,31 +13,28 @@ namespace Ball
 {
     public partial class Form1 : Form
     {
-        int x, y, speed;
+        /*int x, y, speed;
         Ball singleBall;
         Ball[] myBalls;
         List<Ball> myThreadedBalls;
-        Color[] colors = new Color[] { Color.Red, Color.Blue, Color.DarkGreen, Color.Yellow, Color.Cyan };
+        Color[] colors = new Color[] { Color.Red, Color.Blue, Color.DarkGreen, Color.Yellow, Color.Cyan };*/
 
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
-            e.Graphics.FillEllipse(Brushes.Blue, x, y, 10, 10);
-            //This is the paint color of the circle that is 10 by 10
-            //e.Graphics.DrawEllipse(Pens.Red, x, y, 10, 10);
+            /*e.Graphics.FillEllipse(Brushes.Blue, x, y, 10, 10);
             SolidBrush colorBrush = new SolidBrush(singleBall.color);
             e.Graphics.FillEllipse(colorBrush, singleBall.x, singleBall.y, singleBall.radius, singleBall.radius);
-
             //foreach (Ball myBall in myBalls) {
             foreach (Ball myBall in myThreadedBalls)
             {
                 colorBrush = new SolidBrush(myBall.color);
                 e.Graphics.FillEllipse(colorBrush, myBall.x, myBall.y, myBall.radius, myBall.radius);
-            }
+            }*/
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            y = y + speed;
+            /*y = y + speed;
             if (y < 0)
                 speed = -speed;
             ///if y is less than 0 then we change direction}
@@ -47,13 +44,12 @@ namespace Ball
             //            foreach (Ball myBall in myBalls)
             //            foreach (Ball myBall in myThreadedBalls)
             //                myBall.move();
-            this.Invalidate();
+            this.Invalidate();*/
         }
 
         private void Form1_MouseClick(object sender, MouseEventArgs e)
         {
-            //timer1.Enabled = !timer1.Enabled;
-            if (e.Button == MouseButtons.Left)
+            /*if (e.Button == MouseButtons.Left)
             {
                 timer1.Enabled = !timer1.Enabled;
             }
@@ -68,12 +64,12 @@ namespace Ball
             {
                 foreach (Ball myBall in myThreadedBalls)
                     myBall.threadPause = !myBall.threadPause;
-            }
+            }*/
         }
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Left)
+            /*if (e.KeyCode == Keys.Left)
             {
                 singleBall.radius *= 2;
                 singleBall.radius *= 2;
@@ -95,18 +91,46 @@ namespace Ball
             {
                 singleBall.xspeed /= 2;
                 singleBall.yspeed /= 2;
-            }
+            }*/
         }
 
         private void Form1_MouseMove(object sender, MouseEventArgs e)
         {
-            singleBall.x = e.X - singleBall.radius / 2;
-            singleBall.y = e.Y - singleBall.radius / 2;
+            /*singleBall.x = e.X - singleBall.radius / 2;
+            singleBall.y = e.Y - singleBall.radius / 2;*/
+        }
+
+        private void secondForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Show();
+        }
+
+        private void buttonRank_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void buttonEasy_Click(object sender, EventArgs e)
+        {
+            FormEasy secondForm = new FormEasy();
+            Hide();
+            secondForm.FormClosing += secondForm_FormClosing;
+            secondForm.Show();
+        }
+
+        private void buttonNormal_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void buttonHard_Click(object sender, EventArgs e)
+        {
+
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            speed = 1;
+            /*speed = 1;
             x = this.ClientSize.Width / 2;
             y = this.ClientSize.Height - 10;
             Random random = new Random();
@@ -124,7 +148,6 @@ namespace Ball
 
             for (int i = 0; i < myBalls.Length; i++)
             {
-
                 myBalls[i] = new Ball(this);
                 myBalls[i].radius = random.Next(1, 100);
                 myBalls[i].x = random.Next(myBalls[i].radius, ClientSize.Width - myBalls[i].radius);
@@ -139,31 +162,25 @@ namespace Ball
             }
 
             timer1.Interval = 100;
-            timer1.Enabled = true;
+            timer1.Enabled = true;*/
         }
 
         public Form1()
         {
             InitializeComponent();
-            this.DoubleBuffered = true;
+            //this.DoubleBuffered = true;
         }
     }
 
-    class Ball
+    /*class Ball
     {
 
         public int radius;
-
         public int x, y;
-
         public int xspeed, yspeed;
-
         public Color color;
-
         public Boolean threadStop = false;
-
         public Boolean threadPause = false;
-
         Control form;
 
         public Ball(Control form)
@@ -213,5 +230,5 @@ namespace Ball
                 Thread.Sleep(50);
             }
         }
-    }
+    }*/
 }
