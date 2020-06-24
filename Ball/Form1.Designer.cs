@@ -78,21 +78,21 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("新細明體", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label1.Location = new System.Drawing.Point(134, 72);
+            this.label1.Location = new System.Drawing.Point(122, 74);
             this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(58, 24);
+            this.label1.Size = new System.Drawing.Size(82, 24);
             this.label1.TabIndex = 3;
-            this.label1.Text = "接球";
+            this.label1.Text = "猜綠球";
             // 
             // buttonRank
             // 
             this.buttonRank.Location = new System.Drawing.Point(17, 20);
             this.buttonRank.Margin = new System.Windows.Forms.Padding(2);
             this.buttonRank.Name = "buttonRank";
-            this.buttonRank.Size = new System.Drawing.Size(56, 18);
+            this.buttonRank.Size = new System.Drawing.Size(60, 26);
             this.buttonRank.TabIndex = 4;
-            this.buttonRank.Text = "排行";
+            this.buttonRank.Text = "紀錄";
             this.buttonRank.UseVisualStyleBackColor = true;
             this.buttonRank.Click += new System.EventHandler(this.buttonRank_Click);
             // 

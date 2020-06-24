@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -13,41 +14,108 @@ namespace Ball
 {
     public partial class FormEasy : Form
     {
-        int x, y, speed;
+        int x, y, speed, timing, acc;
         Ball singleBall;
         Ball[] myBalls;
         List<Ball> myThreadedBalls;
         Color[] colors = new Color[] { Color.Red, Color.Blue, Color.DarkGreen, Color.Yellow, Color.Cyan };
 
+        private void textBox1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                if (textBox1.Text == (acc).ToString())
+                {
+                    timer1.Enabled = false;
+                    MessageBox.Show("成功! 耗時" + timing / 10 + "." + timing % 10 + "秒");
+                    writeCSV();
+                    this.Close();
+                }
+                else
+                {
+                    timing += 30;
+                }
+
+                textBox1.Focus();
+            }
+        }
+
+        private void writeCSV()
+        {
+            string[] arr = new string[4];
+
+            DateTime myDate = DateTime.Now;
+
+            string myDateString = myDate.ToString("yyyy-MM-dd");
+            string myTimeString = myDate.ToString("HH:mm:ss");
+
+            arr[0] = myDateString;
+            arr[1] = myTimeString;
+            arr[2] = "簡單";
+            arr[3] = timing / 10 + "." + timing % 10;
+
+            //            itm = new ListViewItem(arr);
+            //            listView1.Items.Add(itm);
+
+            string fileName = "myRank.csv";
+            try
+            {
+                FileInfo fi = new FileInfo(fileName);
+                if (!fi.Directory.Exists)
+                {
+                    fi.Directory.Create();
+                }
+                FileStream fsw = new FileStream(fileName, System.IO.FileMode.Append, System.IO.FileAccess.Write);
+                StreamWriter sw = new StreamWriter(fsw, System.Text.Encoding.UTF8);
+                string csvData = arr[0] + "," + arr[1] + "," + arr[2] + "," + arr[3];
+                sw.WriteLine(csvData);
+                sw.Close();
+                fsw.Close();
+            }
+
+            catch
+            {
+            }
+        }
+
         private void FormEasy_Load(object sender, EventArgs e)
         {
+            timing = 0;
+            acc = 0;
             speed = 1;
             x = this.ClientSize.Width / 2;
             y = this.ClientSize.Height - 10;
             Random random = new Random();
-            //myBall = new Ball(this, 20, x, 0, speed, speed, Color.BlueViolet);
-            singleBall = new Ball(this);
-            singleBall.radius = random.Next(1, 100);
-            singleBall.x = random.Next(singleBall.radius, ClientSize.Width - singleBall.radius);
-            singleBall.y = random.Next(singleBall.radius, ClientSize.Height - singleBall.radius);
-            singleBall.xspeed = random.Next(-5, 5);
-            singleBall.yspeed = random.Next(-5, 5);
-            singleBall.color = colors[random.Next(0, 4)];
 
-            myBalls = new Ball[random.Next(10, 100)];
+            singleBall = new Ball(this);
+            singleBall.radius = 40;
+            singleBall.x = ClientSize.Width / 2 - singleBall.radius;
+            singleBall.y = 0;
+            singleBall.color = Color.Black;
+
+            myBalls = new Ball[Constants.BallNumber];
             myThreadedBalls = new List<Ball>();
 
             for (int i = 0; i < myBalls.Length; i++)
             {
                 myBalls[i] = new Ball(this);
-                myBalls[i].radius = random.Next(1, 100);
+                myBalls[i].radius = 20;
                 myBalls[i].x = random.Next(myBalls[i].radius, ClientSize.Width - myBalls[i].radius);
                 myBalls[i].y = random.Next(myBalls[i].radius, ClientSize.Height - myBalls[i].radius);
-                myBalls[i].xspeed = random.Next(-5, 5);
-                myBalls[i].yspeed = random.Next(-5, 5);
-                myBalls[i].color = Color.FromArgb(random.Next(0, 255), random.Next(0, 255), random.Next(0, 255));
+                int s = random.Next(-Constants.BallSpeed, Constants.BallSpeed),
+                    d = random.Next(-Constants.BallSpeed, Constants.BallSpeed);
+                if (s == 0) s = 3;
+                if (d == 0) d = 3;
+                myBalls[i].xspeed = s;
+                myBalls[i].yspeed = d;
+                myBalls[i].color = Color.Green;
+            }
+
+            int r = random.Next(5, 8);
+            acc += r;
+            for (int i = 0; i < r; i++)
+            {
                 myThreadedBalls.Add(myBalls[i]);
-                // Threaded Ball
                 Thread tid1 = new Thread(new ThreadStart(myBalls[i].move));
                 tid1.Start();
             }
@@ -61,13 +129,21 @@ namespace Ball
             y = y + speed;
             if (y < 0)
                 speed = -speed;
-            ///if y is less than 0 then we change direction}
             else if (y + 10 > this.ClientSize.Height)
                 speed = -speed;
-            //            singleBall.move();
-            //            foreach (Ball myBall in myBalls)
-            //            foreach (Ball myBall in myThreadedBalls)
-            //                myBall.move();
+
+            if (timing++ % 10 == 0)
+            {
+                if (acc < Constants.BallNumber)
+                {
+                    myThreadedBalls.Add(myBalls[acc]);
+                    Thread tid1 = new Thread(new ThreadStart(myBalls[acc].move));
+                    tid1.Start();
+                    acc++;
+                }
+            }
+            label1.Text = "時間 : " + timing / 10 + "." + timing % 10;
+
             this.Invalidate();
         }
 
@@ -79,16 +155,14 @@ namespace Ball
 
         private void FormEasy_Paint(object sender, PaintEventArgs e)
         {
-            e.Graphics.FillEllipse(Brushes.Blue, x, y, 10, 10);
             SolidBrush colorBrush = new SolidBrush(singleBall.color);
-            e.Graphics.FillEllipse(colorBrush, singleBall.x, singleBall.y, singleBall.radius, singleBall.radius);
-            //foreach (Ball myBall in myBalls) {
             foreach (Ball myBall in myThreadedBalls)
             {
                 colorBrush = new SolidBrush(myBall.color);
                 e.Graphics.FillEllipse(colorBrush, myBall.x, myBall.y, myBall.radius, myBall.radius);
             }
         }
+
     }
 
     class Ball
@@ -134,15 +208,12 @@ namespace Ball
                     y = y + yspeed;
                     if (y < 0)
                         yspeed = -yspeed;
-                    ///if y is less than 0 then we change direction}
                     else if (y + radius > form.ClientSize.Height)
                         yspeed = -yspeed;
 
                     x = x + xspeed;
-
                     if (x < 0)
                         xspeed = -xspeed;
-                    ///if y is less than 0 then we change direction}
                     else if (x + radius > form.ClientSize.Width)
                         xspeed = -xspeed;
                 }
@@ -150,4 +221,11 @@ namespace Ball
             }
         }
     }
+
+    static class Constants
+    {
+        public const int BallNumber = 12;
+        public const int BallSpeed = 3;
+    }
+
 }

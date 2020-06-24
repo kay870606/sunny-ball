@@ -107,7 +107,10 @@ namespace Ball
 
         private void buttonRank_Click(object sender, EventArgs e)
         {
-
+            FormRank secondForm = new FormRank();
+            Hide();
+            secondForm.FormClosing += secondForm_FormClosing;
+            secondForm.Show();
         }
 
         private void buttonEasy_Click(object sender, EventArgs e)
