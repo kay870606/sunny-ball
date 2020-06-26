@@ -40,3 +40,5 @@ C:\Users\Mia860820\Downloads\sunny-ball\Ball\obj\Debug\Ball.exe
 C:\Users\Mia860820\Downloads\sunny-ball\Ball\obj\Debug\Ball.pdb
 C:\Users\Mia860820\Downloads\sunny-ball\Ball\obj\Debug\Ball.FormEasy.resources
 C:\Users\Mia860820\Downloads\sunny-ball\Ball\obj\Debug\Ball.FormRank.resources
+C:\Users\Mia860820\Downloads\sunny-ball\Ball\obj\Debug\Ball.FormNormal.resources
+C:\Users\Mia860820\Downloads\sunny-ball\Ball\obj\Debug\Ball.FormHard.resources

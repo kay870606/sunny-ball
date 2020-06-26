@@ -123,12 +123,18 @@ namespace Ball
 
         private void buttonNormal_Click(object sender, EventArgs e)
         {
-
+            FormNormal secondForm = new FormNormal();
+            Hide();
+            secondForm.FormClosing += secondForm_FormClosing;
+            secondForm.Show();
         }
 
         private void buttonHard_Click(object sender, EventArgs e)
         {
-
+            FormHard secondForm = new FormHard();
+            Hide();
+            secondForm.FormClosing += secondForm_FormClosing;
+            secondForm.Show();
         }
 
         private void Form1_Load(object sender, EventArgs e)
