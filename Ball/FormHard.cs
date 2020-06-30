@@ -14,7 +14,7 @@ namespace Ball
 {
     public partial class FormHard : Form
     {
-        int x, y, speed, timing, acc;
+        int x, y, speed, timing, acc, disappear, timing2, score;
         Ball singleBall;
         Ball[] myBalls;
         Ball[] redBalls;
@@ -26,7 +26,7 @@ namespace Ball
         {
             if (e.KeyCode == Keys.Enter)
             {
-                if (textBox1.Text == (acc).ToString())
+                if (textBox1.Text == (score).ToString())
                 {
                     timer1.Enabled = false;
                     MessageBox.Show("成功! 耗時" + timing / 10 + "." + timing % 10 + "秒");
@@ -36,6 +36,8 @@ namespace Ball
                 else
                 {
                     timing += 30;
+                    if (disappear < Constants.BallNumber)
+                        myThreadedBalls.Remove(myBalls[disappear++]);
                 }
 
                 textBox1.Focus();
@@ -55,9 +57,6 @@ namespace Ball
             arr[1] = myTimeString;
             arr[2] = "困難";
             arr[3] = timing / 10 + "." + timing % 10;
-
-            //            itm = new ListViewItem(arr);
-            //            listView1.Items.Add(itm);
 
             string fileName = "myRank.csv";
             try
@@ -81,7 +80,10 @@ namespace Ball
 
         private void FormHard_Load(object sender, EventArgs e)
         {
+            score = 0;
+            disappear = 0;
             timing = 0;
+            timing2 = 1;
             acc = 0;
             speed = 1;
             x = this.ClientSize.Width / 2;
@@ -94,17 +96,31 @@ namespace Ball
             singleBall.y = 0;
             singleBall.color = Color.Black;
 
-            myBalls = new Ball[Constants.BallNumber + 5];
+            myBalls = new Ball[Constants.BallNumber];
             myThreadedBalls = new List<Ball>();
 
             for (int i = 0; i < myBalls.Length; i++)
             {
                 myBalls[i] = new Ball(this);
-                myBalls[i].radius = 20;
+                if (i % 3 == 0)
+                {
+                    myBalls[i].radius = 10;
+                    score += 1;
+                }
+                else if (i % 3 == 1)
+                {
+                    myBalls[i].radius = 30;
+                    score += 2;
+                }
+                else
+                {
+                    myBalls[i].radius = 60;
+                    score += 3;
+                }
                 myBalls[i].x = random.Next(myBalls[i].radius, ClientSize.Width - myBalls[i].radius);
                 myBalls[i].y = random.Next(myBalls[i].radius, ClientSize.Height - myBalls[i].radius);
-                int s = random.Next(-Constants.BallSpeed - 5, Constants.BallSpeed + 5),
-                    d = random.Next(-Constants.BallSpeed - 5, Constants.BallSpeed + 5);
+                int s = random.Next(-Constants.BallSpeed, Constants.BallSpeed),
+                    d = random.Next(-Constants.BallSpeed, Constants.BallSpeed);
                 if (s == 0) s = 3;
                 if (d == 0) d = 3;
                 myBalls[i].xspeed = s;
@@ -112,7 +128,7 @@ namespace Ball
                 myBalls[i].color = Color.Green;
             }
 
-            int r = random.Next(5, 8);
+            int r = random.Next(3, 5);
             acc += r;
             for (int i = 0; i < r; i++)
             {
@@ -122,13 +138,24 @@ namespace Ball
             }
 
 
-            redBalls = new Ball[Constants.BallNumber + 5];//red
+            redBalls = new Ball[Constants.BallNumber];//red
             myThreadedRedBalls = new List<Ball>();
 
             for (int i = 0; i < redBalls.Length; i++)
             {
                 redBalls[i] = new Ball(this);
-                redBalls[i].radius = 20;
+                if (i % 3 == 0)
+                {
+                    redBalls[i].radius = 10;
+                }
+                else if (i % 3 == 1)
+                {
+                    redBalls[i].radius = 20;
+                }
+                else
+                {
+                    redBalls[i].radius = 30;
+                }
                 redBalls[i].x = random.Next(redBalls[i].radius, ClientSize.Width - redBalls[i].radius);
                 redBalls[i].y = random.Next(redBalls[i].radius, ClientSize.Height - redBalls[i].radius);
                 int s = random.Next(-Constants.BallSpeed, Constants.BallSpeed),
@@ -137,7 +164,14 @@ namespace Ball
                 if (d == 0) d = 3;
                 redBalls[i].xspeed = s;
                 redBalls[i].yspeed = d;
-                redBalls[i].color = Color.Red;
+                if (i % 2 == 0)
+                {
+                    redBalls[i].color = Color.Red;
+                }
+                else
+                {
+                    redBalls[i].color = Color.Blue;
+                }
             }
 
             int rs = random.Next(5, 8);
@@ -160,9 +194,10 @@ namespace Ball
             else if (y + 10 > this.ClientSize.Height)
                 speed = -speed;
 
+
             if (timing++ % 10 == 0)
             {
-                if (acc < Constants.BallNumber + 5)
+                if (acc < Constants.BallNumber)
                 {
                     myThreadedBalls.Add(myBalls[acc]);
                     Thread tid1 = new Thread(new ThreadStart(myBalls[acc].move));
@@ -175,6 +210,16 @@ namespace Ball
                     acc++;
                 }
             }
+
+            if (timing2++ % 40 == 0)
+            {
+                if (disappear < Constants.BallNumber)
+                {
+                    myThreadedBalls.Remove(myBalls[disappear]);
+                    disappear++;
+                }
+            }
+
             label1.Text = "時間 : " + timing / 10 + "." + timing % 10;
 
             this.Invalidate();
@@ -189,10 +234,29 @@ namespace Ball
         private void FormHard_Paint(object sender, PaintEventArgs e)
         {
             SolidBrush colorBrush = new SolidBrush(singleBall.color);
+            int i = 0;
             foreach (Ball myBall in myThreadedBalls)
             {
                 colorBrush = new SolidBrush(myBall.color);
-                e.Graphics.FillEllipse(colorBrush, myBall.x, myBall.y, myBall.radius, myBall.radius);
+
+                if (i % 3 == 0)
+                {
+                    e.Graphics.FillEllipse(colorBrush, myBall.x, myBall.y, myBall.radius, myBall.radius);
+                }
+                else if (i % 3 == 1)
+                {
+                    e.Graphics.FillRectangle(colorBrush, myBall.x, myBall.y, myBall.radius, myBall.radius);
+                }
+                else
+                {
+                    Point[] points = new Point[3];
+                    points[0] = new Point((int)myBall.x, (int)myBall.y);
+                    points[1] = new Point((int)myBall.x - myBall.radius / 2, (int)myBall.y + myBall.radius);
+                    points[2] = new Point((int)myBall.x + myBall.radius / 2, (int)myBall.y + myBall.radius);
+                    e.Graphics.FillPolygon(colorBrush, points);
+                }
+                i++;
+
             }
 
             foreach (Ball redBall in myThreadedRedBalls)

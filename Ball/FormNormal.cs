@@ -14,7 +14,7 @@ namespace Ball
 {
     public partial class FormNormal : Form
     {
-        int x, y, speed, timing, acc;
+        int x, y, speed, timing, acc, disappear, timing2, score;
         Ball singleBall;
         Ball[] myBalls;
         Ball[] redBalls;
@@ -26,7 +26,7 @@ namespace Ball
         {
             if (e.KeyCode == Keys.Enter)
             {
-                if (textBox1.Text == (acc).ToString())
+                if (textBox1.Text == (score).ToString())
                 {
                     timer1.Enabled = false;
                     MessageBox.Show("成功! 耗時" + timing / 10 + "." + timing % 10 + "秒");
@@ -56,9 +56,6 @@ namespace Ball
             arr[2] = "普通";
             arr[3] = timing / 10 + "." + timing % 10;
 
-            //            itm = new ListViewItem(arr);
-            //            listView1.Items.Add(itm);
-
             string fileName = "myRank.csv";
             try
             {
@@ -81,7 +78,10 @@ namespace Ball
 
         private void FormNormal_Load(object sender, EventArgs e)
         {
+            score = 0;
+            disappear = 0;
             timing = 0;
+            timing2 = 1;
             acc = 0;
             speed = 1;
             x = this.ClientSize.Width / 2;
@@ -100,7 +100,21 @@ namespace Ball
             for (int i = 0; i < myBalls.Length; i++)
             {
                 myBalls[i] = new Ball(this);
-                myBalls[i].radius = 20;
+                if (i % 3 == 0)
+                {
+                    myBalls[i].radius = 10;
+                    score += 1;
+                }
+                else if (i % 3 == 1)
+                {
+                    myBalls[i].radius = 20;
+                    score += 2;
+                }
+                else
+                {
+                    myBalls[i].radius = 30;
+                    score += 3;
+                }
                 myBalls[i].x = random.Next(myBalls[i].radius, ClientSize.Width - myBalls[i].radius);
                 myBalls[i].y = random.Next(myBalls[i].radius, ClientSize.Height - myBalls[i].radius);
                 int s = random.Next(-Constants.BallSpeed, Constants.BallSpeed),
@@ -112,7 +126,7 @@ namespace Ball
                 myBalls[i].color = Color.Green;
             }
 
-            int r = random.Next(5, 8);
+            int r = random.Next(3, 5);
             acc += r;
             for (int i = 0; i < r; i++)
             {
@@ -128,7 +142,18 @@ namespace Ball
             for (int i = 0; i < redBalls.Length; i++)
             {
                 redBalls[i] = new Ball(this);
-                redBalls[i].radius = 20;
+                if (i % 3 == 0)
+                {
+                    redBalls[i].radius = 10;
+                }
+                else if (i % 3 == 1)
+                {
+                    redBalls[i].radius = 20;
+                }
+                else
+                {
+                    redBalls[i].radius = 30;
+                }
                 redBalls[i].x = random.Next(redBalls[i].radius, ClientSize.Width - redBalls[i].radius);
                 redBalls[i].y = random.Next(redBalls[i].radius, ClientSize.Height - redBalls[i].radius);
                 int s = random.Next(-Constants.BallSpeed, Constants.BallSpeed),
@@ -137,7 +162,15 @@ namespace Ball
                 if (d == 0) d = 3;
                 redBalls[i].xspeed = s;
                 redBalls[i].yspeed = d;
-                redBalls[i].color = Color.Red;
+                if (i % 2 == 0)
+                {
+                    redBalls[i].color = Color.Red;
+                }
+                else
+                {
+                    redBalls[i].color = Color.Blue;
+                }
+
             }
 
             int rs = random.Next(5, 8);
@@ -160,13 +193,14 @@ namespace Ball
             else if (y + 10 > this.ClientSize.Height)
                 speed = -speed;
 
+
             if (timing++ % 10 == 0)
             {
                 if (acc < Constants.BallNumber)
                 {
                     myThreadedBalls.Add(myBalls[acc]);
                     Thread tid1 = new Thread(new ThreadStart(myBalls[acc].move));
-                    tid1.Start();                    
+                    tid1.Start();
 
                     myThreadedRedBalls.Add(redBalls[acc]);
                     Thread tid2 = new Thread(new ThreadStart(redBalls[acc].move));
@@ -175,6 +209,16 @@ namespace Ball
                     acc++;
                 }
             }
+
+            if (timing2++ % 40 == 0)
+            {
+                if (disappear < Constants.BallNumber)
+                {
+                    myThreadedBalls.Remove(myBalls[disappear]);
+                    disappear++;
+                }
+            }
+
             label1.Text = "時間 : " + timing / 10 + "." + timing % 10;
 
             this.Invalidate();
