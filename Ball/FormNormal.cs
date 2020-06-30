@@ -103,17 +103,17 @@ namespace Ball
                 if (i % 3 == 0)
                 {
                     myBalls[i].radius = 10;
-                    score += 1;
+                    //score += 1;
                 }
                 else if (i % 3 == 1)
                 {
                     myBalls[i].radius = 20;
-                    score += 2;
+                    //score += 2;
                 }
                 else
                 {
                     myBalls[i].radius = 30;
-                    score += 3;
+                    //score += 3;
                 }
                 myBalls[i].x = random.Next(myBalls[i].radius, ClientSize.Width - myBalls[i].radius);
                 myBalls[i].y = random.Next(myBalls[i].radius, ClientSize.Height - myBalls[i].radius);
@@ -133,6 +133,18 @@ namespace Ball
                 myThreadedBalls.Add(myBalls[i]);
                 Thread tid1 = new Thread(new ThreadStart(myBalls[i].move));
                 tid1.Start();
+                if (i % 3 == 0)
+                {
+                    score += 1;
+                }
+                else if (i % 3 == 1)
+                {
+                    score += 2;
+                }
+                else
+                {
+                    score += 3;
+                }
             }
 
 
@@ -170,7 +182,6 @@ namespace Ball
                 {
                     redBalls[i].color = Color.Blue;
                 }
-
             }
 
             int rs = random.Next(5, 8);
@@ -206,6 +217,18 @@ namespace Ball
                     Thread tid2 = new Thread(new ThreadStart(redBalls[acc].move));
                     tid2.Start();
 
+                    if (acc % 3 == 0)
+                    {
+                        score += 1;
+                    }
+                    else if (acc % 3 == 1)
+                    {
+                        score += 2;
+                    }
+                    else
+                    {
+                        score += 3;
+                    }
                     acc++;
                 }
             }
